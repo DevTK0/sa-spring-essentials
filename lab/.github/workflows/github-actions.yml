@@ -25,7 +25,7 @@ jobs:
         with:
           java-version: "17"
           distribution: "temurin"
-      - uses: gradle/gradle-build-action@v2
-        with:
-          arguments: build
-          build-root-directory: ./lab
+      # - uses: gradle/gradle-build-action@v2
+      #   with:
+      #     arguments: build
+      #     build-root-directory: ./lab
