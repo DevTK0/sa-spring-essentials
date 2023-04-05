@@ -15,12 +15,6 @@ import javax.sql.DataSource;
 @ComponentScan("rewards.internal")
 public class RewardsConfig {
 
-	DataSource dataSource;
-
-	public RewardsConfig(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
-
 	// TODO-02: Remove all of the @Bean methods above.
 	// - Remove the code that autowires DataSource as well.
 	// - Run the RewardNetworkTests test. It should fail. Why?
