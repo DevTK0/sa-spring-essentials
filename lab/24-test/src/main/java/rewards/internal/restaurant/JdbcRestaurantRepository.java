@@ -14,6 +14,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -23,6 +24,7 @@ import common.money.Percentage;
  * Loads restaurants from a data source using the JDBC API.
  */
 @Repository
+@Profile("jdbc")
 public class JdbcRestaurantRepository implements RestaurantRepository {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -30,7 +32,8 @@ public class JdbcRestaurantRepository implements RestaurantRepository {
 	private DataSource dataSource;
 
 	/**
-	 * The Restaurant object cache. Cached restaurants are indexed by their merchant numbers.
+	 * The Restaurant object cache. Cached restaurants are indexed by their merchant
+	 * numbers.
 	 */
 	private Map<String, Restaurant> restaurantCache;
 
@@ -56,8 +59,10 @@ public class JdbcRestaurantRepository implements RestaurantRepository {
 	}
 
 	/**
-	 * Helper method that populates the {@link #restaurantCache restaurant object cache} from rows in the T_RESTAURANT
-	 * table. Cached restaurants are indexed by their merchant numbers. This method is called on initialization.
+	 * Helper method that populates the {@link #restaurantCache restaurant object
+	 * cache} from rows in the T_RESTAURANT
+	 * table. Cached restaurants are indexed by their merchant numbers. This method
+	 * is called on initialization.
 	 */
 	@PostConstruct
 	void populateRestaurantCache() {
@@ -109,7 +114,8 @@ public class JdbcRestaurantRepository implements RestaurantRepository {
 	 *
 	 * @param merchantNumber the restaurant's merchant number
 	 * @return the restaurant
-	 * @throws EmptyResultDataAccessException if no restaurant was found with that merchant number
+	 * @throws EmptyResultDataAccessException if no restaurant was found with that
+	 *                                        merchant number
 	 */
 	private Restaurant queryRestaurantCache(String merchantNumber) {
 		Restaurant restaurant = restaurantCache.get(merchantNumber);
@@ -120,7 +126,8 @@ public class JdbcRestaurantRepository implements RestaurantRepository {
 	}
 
 	/**
-	 * Helper method that clears the cache of restaurants.  This method is called on destruction
+	 * Helper method that clears the cache of restaurants. This method is called on
+	 * destruction
 	 */
 	@PreDestroy
 	void clearRestaurantCache() {

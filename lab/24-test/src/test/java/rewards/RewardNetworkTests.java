@@ -1,12 +1,14 @@
 package rewards;
 
 import common.money.MonetaryAmount;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -19,14 +21,15 @@ import static org.junit.jupiter.api.Assertions.*;
 /*
  * TODO-00: In this lab, you are going to exercise the following:
  * - Using annotation(s) from Spring TestContext Framework for
- *   creating application context for the test
+ * creating application context for the test
  * - Using profiles in the test
  *
  * TODO-01: Use Spring TestContext Framework
  * - Read through Spring document on Spring TestContext Framework
- *   (https://docs.spring.io/spring-framework/docs/current/spring-framework-reference/testing.html#testcontext-framework)
+ * (https://docs.spring.io/spring-framework/docs/current/spring-framework-
+ * reference/testing.html#testcontext-framework)
  * - Add annotation(s) to this class so that it can
- *   use Spring TestContext Framework
+ * use Spring TestContext Framework
  * - Remove setUp() and tearDown() methods
  * - Remove the attribute "context" which is not needed anymore.
  * - Run the current test. Observe a test failure.
@@ -34,82 +37,91 @@ import static org.junit.jupiter.api.Assertions.*;
  * - Re-run the current test, it should pass.
  */
 
-/* TODO-02: Annotate all 'Stub*Repository' classes with @Repository
+/*
+ * TODO-02: Annotate all 'Stub*Repository' classes with @Repository
  * - In the package rewards/internal, annotate all 'Stub*Repository' classes
- *   with the @Repository annotation (WITHOUT specifying any profile yet).
- *   (Make sure you are changing code in the '24-test' project.)
- * - Rerun the current test, it should fail.  Why?
+ * with the @Repository annotation (WITHOUT specifying any profile yet).
+ * (Make sure you are changing code in the '24-test' project.)
+ * - Rerun the current test, it should fail. Why?
  */
 
-/* TODO-03: Assign the 'jdbc' profile to all Jdbc*Repository classes
- * - Using the @Profile annotation, assign the 'jdbc' profile to all Jdbc*Repository classes
- *   (such as JdbcAccountRepository).  (Be sure to annotate the actual repository classes in
- *   src/main/java, not the test classes in src/main/test!)
+/*
+ * TODO-03: Assign the 'jdbc' profile to all Jdbc*Repository classes
+ * - Using the @Profile annotation, assign the 'jdbc' profile to all
+ * Jdbc*Repository classes
+ * (such as JdbcAccountRepository). (Be sure to annotate the actual repository
+ * classes in
+ * src/main/java, not the test classes in src/main/test!)
  * - In the same way, assign the 'stub' profile to all Stub*Repository classes
- *   (such as StubAccountRepository)
- * - Add @ActiveProfiles to this test class (below) and specify the "stub" profile.
+ * (such as StubAccountRepository)
+ * - Add @ActiveProfiles to this test class (below) and specify the "stub"
+ * profile.
  * - Run the current test, it should pass.
  * - Examine the logs, they should indicate "stub" repositories were used.
  */
 
-/* TODO-04: Change active-profile to "jdbc".
+/*
+ * TODO-04: Change active-profile to "jdbc".
  * - Rerun the test, it should pass.
  * - Check which repository implementations are being used now.
  */
 
-/* TODO-05: Assign beans to the "local" profile
+/*
+ * TODO-05: Assign beans to the "local" profile
  * - Go to corresponding step in TestInfrastructureLocalConfig class.
  */
 
-/* TODO-06: Use "jdbc" and "local" as active profiles
- * - Now that the bean 'dataSource' is specific to the local profile, should we expect
- * 	 this test to be successful?
- * - Make the appropriate changes so the current test uses 2 profiles ('jdbc' and 'local').
+/*
+ * TODO-06: Use "jdbc" and "local" as active profiles
+ * - Now that the bean 'dataSource' is specific to the local profile, should we
+ * expect
+ * this test to be successful?
+ * - Make the appropriate changes so the current test uses 2 profiles ('jdbc'
+ * and 'local').
  * - Rerun the test, it should pass.
  */
 
-/* TODO-07: Use "jdbc" and "jndi" as active profiles
- * - Open TestInfrastructureJndiConfig and note the different datasource that will be
- * 	 used if the profile = 'jndi'.
+/*
+ * TODO-07: Use "jdbc" and "jndi" as active profiles
+ * - Open TestInfrastructureJndiConfig and note the different datasource that
+ * will be
+ * used if the profile = 'jndi'.
  * - Now update the current test so it uses profiles 'jdbc' and 'jndi'.
  * - Rerun the test, it should pass.
  */
 
-/* TODO-08 (Optional): Create an inner static class from TestInfrastructureConfig
+/*
+ * TODO-08 (Optional): Create an inner static class from
+ * TestInfrastructureConfig
  * - Once inner static class is created, remove configuration
- *   class reference to TestInfrastructureConfig class from the annotation
- *   you added to this class in TO DO-01 above. (For more detailed on, refer tp
- *   lab document.)
+ * class reference to TestInfrastructureConfig class from the annotation
+ * you added to this class in TO DO-01 above. (For more detailed on, refer tp
+ * lab document.)
  * - Run the test again.
  */
-
+@SpringJUnitConfig()
+@ActiveProfiles({ "jdbc", "jndi" })
 public class RewardNetworkTests {
 
-	
+	@Configuration
+	@ComponentScan("rewards")
+	static class TestInfrastructureConfig {
+
+		/**
+		 * The bean logging post-processor from the bean lifecycle slides.
+		 */
+		@Bean
+		public static LoggingBeanPostProcessor loggingBean() {
+			return new LoggingBeanPostProcessor();
+		}
+
+	}
+
 	/**
 	 * The object being tested.
 	 */
+	@Autowired
 	private RewardNetwork rewardNetwork;
-
-	/**
-	 * Need this to enable clean shutdown at the end of the application
-	 */
-	private ConfigurableApplicationContext context;
-
-	@BeforeEach
-	public void setUp() {
-		// Create the test configuration for the application from one file
-		context = SpringApplication.run(TestInfrastructureConfig.class);
-		// Get the bean to use to invoke the application
-		rewardNetwork = context.getBean(RewardNetwork.class);
-	}
-
-	@AfterEach
-	public void tearDown() throws Exception {
-		// simulate the Spring bean destruction lifecycle:
-		if (context != null)
-			context.close();
-	}
 
 	@Test
 	@DisplayName("Test if reward computation and distribution works")
@@ -147,7 +159,8 @@ public class RewardNetworkTests {
 		// The assertAll() is from JUnit 5 to group related checks together.
 		assertAll("distribution of reward",
 				() -> assertEquals(2, contribution.getDistributions().size()),
-				() -> assertEquals(MonetaryAmount.valueOf("4.00"), contribution.getDistribution("Annabelle").getAmount()),
+				() -> assertEquals(MonetaryAmount.valueOf("4.00"),
+						contribution.getDistribution("Annabelle").getAmount()),
 				() -> assertEquals(MonetaryAmount.valueOf("4.00"), contribution.getDistribution("Corgan").getAmount()));
 	}
 }
