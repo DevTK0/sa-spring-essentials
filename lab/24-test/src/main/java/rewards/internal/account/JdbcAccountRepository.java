@@ -10,6 +10,7 @@ import javax.sql.DataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Repository;
 
@@ -18,8 +19,9 @@ import common.money.Percentage;
 
 /**
  * Loads accounts from a data source using the JDBC API.
- */ 
+ */
 @Repository
+@Profile("jdbc")
 public class JdbcAccountRepository implements AccountRepository {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -35,6 +37,7 @@ public class JdbcAccountRepository implements AccountRepository {
 
 	/**
 	 * Sets the data source this repository will use to load accounts.
+	 * 
 	 * @param dataSource the data source
 	 */
 	@Autowired
@@ -116,11 +119,14 @@ public class JdbcAccountRepository implements AccountRepository {
 	}
 
 	/**
-	 * Map the rows returned from the join of T_ACCOUNT and T_ACCOUNT_BENEFICIARY to an fully-reconstituted Account
+	 * Map the rows returned from the join of T_ACCOUNT and T_ACCOUNT_BENEFICIARY to
+	 * an fully-reconstituted Account
 	 * aggregate.
+	 * 
 	 * @param rs the set of rows returned from the query
 	 * @return the mapped Account aggregate
-	 * @throws SQLException an exception occurred extracting data from the result set
+	 * @throws SQLException an exception occurred extracting data from the result
+	 *                      set
 	 */
 	private Account mapAccount(ResultSet rs) throws SQLException {
 		Account account = null;
@@ -142,10 +148,13 @@ public class JdbcAccountRepository implements AccountRepository {
 	}
 
 	/**
-	 * Maps the beneficiary columns in a single row to an AllocatedBeneficiary object.
+	 * Maps the beneficiary columns in a single row to an AllocatedBeneficiary
+	 * object.
+	 * 
 	 * @param rs the result set with its cursor positioned at the current row
 	 * @return an allocated beneficiary
-	 * @throws SQLException an exception occurred extracting data from the result set
+	 * @throws SQLException an exception occurred extracting data from the result
+	 *                      set
 	 */
 	private Beneficiary mapBeneficiary(ResultSet rs) throws SQLException {
 		String name = rs.getString("BENEFICIARY_NAME");

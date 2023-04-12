@@ -29,7 +29,7 @@ public class TestInfrastructureJndiConfig {
 	 * 
 	 * @return The data-source if found
 	 * @throws Exception
-	 *             Any lookup error.
+	 *                   Any lookup error.
 	 */
 	@Bean
 	public DataSource dataSource() throws Exception {
