@@ -23,16 +23,16 @@ public class RewardsConfig {
 	DataSource dataSource;
 
 	@Bean
-	public JdbcTemplate jdbcTemplate() {
-		return new JdbcTemplate(dataSource);
-	}
-
-	@Bean
 	public RewardNetwork rewardNetwork() {
 		return new RewardNetworkImpl(
 				accountRepository(),
 				restaurantRepository(),
 				rewardRepository());
+	}
+
+	@Bean
+	public JdbcTemplate jdbcTemplate() {
+		return new JdbcTemplate(dataSource);
 	}
 
 	@Bean

@@ -12,18 +12,6 @@ import java.sql.SQLException;
 /**
  * Loads accounts from a data source using the JDBC API.
  */
-
-// TODO-10 (Optional) : Inject JdbcTemplate directly to this repository class
-// - Refactor the constructor to get the JdbcTemplate injected directly
-// (instead of DataSource getting injected)
-// - Refactor RewardsConfig accordingly
-// - Refactor JdbcAccountRepositoryTests accordingly
-// - Run JdbcAccountRepositoryTests and verity it passes
-
-// TODO-05: Refactor this repository to use JdbcTemplate.
-// - Add a field of type JdbcTemplate.
-// - Refactor the code in the constructor to instantiate the JdbcTemplate
-// object using the given DataSource object.
 public class JdbcAccountRepository implements AccountRepository {
 
 	private JdbcTemplate jdbcTemplate;
@@ -32,13 +20,6 @@ public class JdbcAccountRepository implements AccountRepository {
 		this.jdbcTemplate = jdbcTemplate;
 	}
 
-	// TODO-07 (Optional): Refactor this method using JdbcTemplate and
-	// ResultSetExtractor
-	// - Create a ResultSetExtractor object and pass it as an argument
-	// to jdbcTemplate.query(..) method
-	// - Let the extractData() method of the ResultSetExtractor to call
-	// mapAccount() method, which is provided in this class, to do all the work.
-	// - Run the JdbcAccountRepositoryTests class. It should pass.
 	public Account findByCreditCard(String creditCardNumber) {
 		String sql = "select a.ID as ID, a.NUMBER as ACCOUNT_NUMBER, a.NAME as ACCOUNT_NAME, c.NUMBER as CREDIT_CARD_NUMBER, "
 				+
@@ -49,89 +30,16 @@ public class JdbcAccountRepository implements AccountRepository {
 				"on a.ID = b.ACCOUNT_ID " +
 				"where c.ACCOUNT_ID = a.ID and c.NUMBER = ?";
 
-		Account account = jdbcTemplate.query(sql, (ResultSetExtractor<Account>) (rs) -> mapAccount(rs),
-				creditCardNumber);
-		// Connection conn = null;
-		// PreparedStatement ps = null;
-		// ResultSet rs = null;
-		// try {
-		// conn = dataSource.getConnection();
-		// ps = conn.prepareStatement(sql);
-		// ps.setString(1, creditCardNumber);
-		// rs = ps.executeQuery();
-		// account = mapAccount(rs);
-		// } catch (SQLException e) {
-		// throw new RuntimeException("SQL exception occurred finding by credit card
-		// number", e);
-		// } finally {
-		// if (rs != null) {
-		// try {
-		// // Close to prevent database cursor exhaustion
-		// rs.close();
-		// } catch (SQLException ex) {
-		// }
-		// }
-		// if (ps != null) {
-		// try {
-		// // Close to prevent database cursor exhaustion
-		// ps.close();
-		// } catch (SQLException ex) {
-		// }
-		// }
-		// if (conn != null) {
-		// try {
-		// // Close to prevent database connection exhaustion
-		// conn.close();
-		// } catch (SQLException ex) {
-		// }
-		// }
-		// }
-		return account;
+		return jdbcTemplate.query(sql, (ResultSetExtractor<Account>) (rs) -> mapAccount(rs), creditCardNumber);
 	}
 
-	// TODO-06: Refactor this method to use JdbcTemplate.
-	// - Note that an account has multiple beneficiaries
-	// and you are going to perform UPDATE operation using
-	// JdbcTemplate for each of those beneficiaries
-	// - Rerun the JdbcAccountRepositoryTests and verify it passes
 	public void updateBeneficiaries(Account account) {
 		String sql = "update T_ACCOUNT_BENEFICIARY SET SAVINGS = ? where ACCOUNT_ID = ? and NAME = ?";
 		for (Beneficiary beneficiary : account.getBeneficiaries()) {
-			this.jdbcTemplate.update(sql, beneficiary.getSavings().asBigDecimal(),
+			jdbcTemplate.update(sql, beneficiary.getSavings().asBigDecimal(),
 					account.getEntityId(),
 					beneficiary.getName());
 		}
-
-		// Connection conn = null;
-		// PreparedStatement ps = null;
-		// try {
-		// conn = dataSource.getConnection();
-		// ps = conn.prepareStatement(sql);
-		// for (Beneficiary beneficiary : account.getBeneficiaries()) {
-		// ps.setBigDecimal(1, beneficiary.getSavings().asBigDecimal());
-		// ps.setLong(2, account.getEntityId());
-		// ps.setString(3, beneficiary.getName());
-		// ps.executeUpdate();
-		// }
-		// } catch (SQLException e) {
-		// throw new RuntimeException("SQL exception occurred updating beneficiary
-		// savings", e);
-		// } finally {
-		// if (ps != null) {
-		// try {
-		// // Close to prevent database cursor exhaustion
-		// ps.close();
-		// } catch (SQLException ex) {
-		// }
-		// }
-		// if (conn != null) {
-		// try {
-		// // Close to prevent database connection exhaustion
-		// conn.close();
-		// } catch (SQLException ex) {
-		// }
-		// }
-		// }
 	}
 
 	/**

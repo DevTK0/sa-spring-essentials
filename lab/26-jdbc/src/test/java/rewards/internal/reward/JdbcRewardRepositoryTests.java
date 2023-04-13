@@ -23,14 +23,6 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * Tests the JDBC reward repository with a test data source to verify
  * data access and relational-to-object mapping behavior works as expected.
- *
- * TODO-00: In this lab, you are going to exercise the following:
- * - Refactoring cumbersome low-level JDBC code to leverage Spring's
- * JdbcTemplate
- * - Using various query methods of JdbcTemplate for retrieving data
- * - Implementing callbacks for converting retrieved data into domain object
- * - RowMapper
- * - ResultSetExtractor (optional)
  */
 public class JdbcRewardRepositoryTests {
 
@@ -67,14 +59,6 @@ public class JdbcRewardRepositoryTests {
 	private void verifyRewardInserted(RewardConfirmation confirmation, Dining dining) throws SQLException {
 		assertEquals(1, getRewardCount());
 
-		// TODO-02: Use JdbcTemplate to query for a map of all column values
-		// of a row in the T_REWARD table based on the confirmationNumber.
-		// - Use "SELECT * FROM T_REWARD WHERE CONFIRMATION_NUMBER = ?" as SQL statement
-		// - After making the changes, execute this test class to verify
-		// its successful execution.
-		// (If you are using Gradle, comment out the test exclude in
-		// the build.gradle file.)
-		//
 		Map<String, Object> values = jdbcTemplate.queryForMap("SELECT * FROM T_REWARD WHERE CONFIRMATION_NUMBER = ?",
 				confirmation.getConfirmationNumber());
 		verifyInsertedValues(confirmation, dining, values);
@@ -91,10 +75,7 @@ public class JdbcRewardRepositoryTests {
 	}
 
 	private int getRewardCount() throws SQLException {
-		// TODO-01: Use JdbcTemplate to query for the number of rows in the T_REWARD
-		// table
-		// - Use "SELECT count(*) FROM T_REWARD" as SQL statement
-		return jdbcTemplate.queryForObject("SELECT count(*) FROM T_REWARD;", Integer.class);
+		return jdbcTemplate.queryForObject("SELECT count(*) from T_REWARD", Integer.class);
 	}
 
 	private DataSource createTestDataSource() {

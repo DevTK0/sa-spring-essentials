@@ -31,8 +31,7 @@ public class JdbcAccountRepositoryTests {
 	@BeforeEach
 	public void setUp() throws Exception {
 		dataSource = createTestDataSource();
-		jdbcTemplate = new JdbcTemplate(dataSource);
-		repository = new JdbcAccountRepository(jdbcTemplate);
+		repository = new JdbcAccountRepository(new JdbcTemplate(dataSource));
 	}
 
 	@Test
