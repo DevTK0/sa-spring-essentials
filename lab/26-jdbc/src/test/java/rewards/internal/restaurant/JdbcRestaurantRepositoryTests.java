@@ -4,6 +4,7 @@ import common.money.Percentage;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 import javax.sql.DataSource;
@@ -11,7 +12,8 @@ import javax.sql.DataSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Tests the JDBC restaurant repository with a test data source to verify data access and relational-to-object mapping
+ * Tests the JDBC restaurant repository with a test data source to verify data
+ * access and relational-to-object mapping
  * behavior works as expected.
  */
 public class JdbcRestaurantRepositoryTests {
@@ -20,7 +22,7 @@ public class JdbcRestaurantRepositoryTests {
 
 	@BeforeEach
 	public void setUp() throws Exception {
-		repository = new JdbcRestaurantRepository(createTestDataSource());
+		repository = new JdbcRestaurantRepository(new JdbcTemplate(createTestDataSource()));
 	}
 
 	@Test
@@ -36,16 +38,16 @@ public class JdbcRestaurantRepositoryTests {
 
 	@Test
 	public void testFindRestaurantByBogusMerchantNumber() {
-		assertThrows(EmptyResultDataAccessException.class, ()-> {
+		assertThrows(EmptyResultDataAccessException.class, () -> {
 			repository.findByMerchantNumber("bogus");
 		});
 	}
 
 	private DataSource createTestDataSource() {
 		return new EmbeddedDatabaseBuilder()
-			.setName("rewards")
-			.addScript("/rewards/testdb/schema.sql")
-			.addScript("/rewards/testdb/data.sql")
-			.build();
+				.setName("rewards")
+				.addScript("/rewards/testdb/schema.sql")
+				.addScript("/rewards/testdb/data.sql")
+				.build();
 	}
 }
