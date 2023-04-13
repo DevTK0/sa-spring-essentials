@@ -3,9 +3,5 @@ dependencies {
 }
 
 test {
-<<<<<<< Updated upstream
-    // exclude '**/JdbcRewardRepositoryTests.class'
-=======
     
->>>>>>> Stashed changes
 }
