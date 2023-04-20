@@ -11,11 +11,15 @@ import rewards.internal.account.AccountRepository;
 import common.money.Percentage;
 
 /**
- * A dummy account repository implementation. Has a single Account "Keith and Keri Donald" with two beneficiaries
- * "Annabelle" (50% allocation) and "Corgan" (50% allocation) associated with credit card "1234123412341234".
+ * A dummy account repository implementation. Has a single Account "Keith and
+ * Keri Donald" with two beneficiaries
+ * "Annabelle" (50% allocation) and "Corgan" (50% allocation) associated with
+ * credit card "1234123412341234".
  * 
- * Stubs facilitate unit testing. An object needing an AccountRepository can work with this stub and not have to bring
- * in expensive and/or complex dependencies such as a Database. Simple unit tests can then verify object behavior by
+ * Stubs facilitate unit testing. An object needing an AccountRepository can
+ * work with this stub and not have to bring
+ * in expensive and/or complex dependencies such as a Database. Simple unit
+ * tests can then verify object behavior by
  * considering the state of this stub.
  */
 public class StubAccountRepository implements AccountRepository {
@@ -29,7 +33,7 @@ public class StubAccountRepository implements AccountRepository {
 		accountsByCreditCard.put("1234123412341234", account);
 	}
 
-	public Account findByCreditCard(String creditCardNumber) {
+	public Account findByCreditCardNumber(String creditCardNumber) {
 		Account account = accountsByCreditCard.get(creditCardNumber);
 		if (account == null) {
 			throw new ObjectRetrievalFailureException(Account.class, creditCardNumber);

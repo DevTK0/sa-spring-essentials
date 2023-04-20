@@ -11,8 +11,10 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
- * A system test that verifies the components of the RewardNetwork application work together to reward for dining
- * successfully. Uses Spring to bootstrap the application for use in a test environment.
+ * A system test that verifies the components of the RewardNetwork application
+ * work together to reward for dining
+ * successfully. Uses Spring to bootstrap the application for use in a test
+ * environment.
  */
 
 @EnableAutoConfiguration
@@ -25,11 +27,10 @@ public class RewardNetworkTests {
 	@Autowired
 	private RewardNetwork rewardNetwork;
 
-	// TODO-08 Run this test (if running with Gradle, make sure to remove the test exclusion in the build.gradle file.
-	//  It should pass.
 	@Test
 	public void testRewardForDining() {
-		// create a new dining of 100.00 charged to credit card '1234123412341234' by merchant '123457890' as test input
+		// create a new dining of 100.00 charged to credit card '1234123412341234' by
+		// merchant '123457890' as test input
 		Dining dining = Dining.createDining("100.00", "1234123412341234", "1234567890");
 
 		// call the 'rewardNetwork' to test its rewardAccountFor(Dining) method
