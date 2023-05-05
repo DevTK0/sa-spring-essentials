@@ -1,5 +1,9 @@
 package accounts.services;
 
+import org.apache.catalina.authenticator.SpnegoAuthenticator.AuthenticateAction;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,7 +16,9 @@ import java.util.stream.Collectors;
 @Service
 public class AccountService {
 
-    @PreAuthorize("hasRole('ADMIN') && #username == principal.username")
+    private final Logger logger = LoggerFactory.getLogger(getClass());
+
+    @PreAuthorize("hasRole('ADMIN') && #username == principal")
     public List<String> getAuthoritiesForUser(String username) {
 
         Collection<? extends GrantedAuthority> grantedAuthorities = SecurityContextHolder.getContext()
