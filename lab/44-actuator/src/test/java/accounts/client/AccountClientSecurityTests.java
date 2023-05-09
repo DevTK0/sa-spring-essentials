@@ -22,45 +22,35 @@ public class AccountClientSecurityTests {
     private TestRestTemplate restTemplate;
 
     @Test
-    @Disabled
     public void any_user_can_access_health_endpoint() {
-        ResponseEntity<String> responseEntity
-                = restTemplate.getForEntity("/actuator/health", String.class);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/actuator/health", String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
-    @Disabled
     public void any_user_can_access_info_endpoint() {
-        ResponseEntity<String> responseEntity
-                = restTemplate.getForEntity("/actuator/info", String.class);
+        ResponseEntity<String> responseEntity = restTemplate.getForEntity("/actuator/info", String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
-    @Disabled
     public void any_user_cannot_access_conditions_endpoint() {
-        ResponseEntity<String> responseEntity
-                = restTemplate.withBasicAuth("anyuser", "anyuser")
-                              .getForEntity("/actuator/conditions", String.class);
+        ResponseEntity<String> responseEntity = restTemplate.withBasicAuth("anyuser", "anyuser")
+                .getForEntity("/actuator/conditions", String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
     }
 
     @Test
-    @Disabled
     public void user_in_ADMIN_role_can_access_conditions_endpoint() {
-        ResponseEntity<String> responseEntity
-                = restTemplate.withBasicAuth("admin", "admin")
-                              .getForEntity("/actuator/conditions", String.class);
+        ResponseEntity<String> responseEntity = restTemplate.withBasicAuth("admin", "admin")
+                .getForEntity("/actuator/conditions", String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.OK);
     }
 
     @Test
-    @Disabled
     public void user_in_ACTUATOR_role_cannot_access_conditions_endpoint() {
-        ResponseEntity<String> responseEntity
-                = restTemplate.withBasicAuth("actuator", "actuator")
-                              .getForEntity("/actuator/conditions", String.class);
+        ResponseEntity<String> responseEntity = restTemplate.withBasicAuth("actuator", "actuator")
+                .getForEntity("/actuator/conditions", String.class);
         assertThat(responseEntity.getStatusCode()).isEqualTo(HttpStatus.FORBIDDEN);
     }
 
